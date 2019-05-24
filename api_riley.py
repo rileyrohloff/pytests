@@ -1,28 +1,53 @@
 import requests as req
 import json
+import utilites
+from dotenv import load_dotenv
+import os
 
-def generate_key(domain,username,password):
-    generate_apiKey = req.get(f"{domain}/attask/api/v10.0/user?action=generateApiKey&method=PUT&username={username}&password={password}")
-    response = generate_apiKey.json()
-    if 'error' in response:
-        return False
-    else:
-        return True
+test_IDs = []
 
-def login_api(domain,userName, Password):
-    login = req.post(f"{domain}/attask/api/v10.0/login?username={userName}&password={Password}")
-    response = login.json()
-    if len(response['data']['sessionID']) != 0:
-        return True
-        return response['data']['sessionID']
-    else:
+load_dotenv()
+
+host = os.getenv('domain')
+username = os.getenv('username')
+password = os.getenv('password')
+
+def create_session():
+
+    login = req.post(utilites.login_url)
+    response_login = login.json()
+    return response_login['data']['sessionID']
+
+def create_project(name):
+
+
+    sessionID = create_session()
+
+
+    params = {
+    'name':name,
+    'groupID':'5b15908a008d09a654a86358f25cc425',
+    'status':'PLN'
+    }
+
+    createURL = f'{host}/attask/api/v10.0/project?updates={params}&sessionID={sessionID}'
+    project_create_call = req.post(createURL)
+    response = project_create_call.json()
+    test_IDs.append(response['data']['ID'])
+
+    statusCode = project_create_call.status_code
+
+
+    if len(test_IDs) == 0:
         return False
-    
-def get_project(domain):
-    sessionID = login_api('https://rileyrohloff.my.workfront.com','username','username')
-    get_projects = req.get(f"{domain}/attask/api-unsupported/project/search?fields=ID&sessionID={sessionID}")
-    response = get_projects.json()
-    if 'data' in response:
-        return True
     else:
-        return False
+        for ID in test_IDs:
+            delete_proj_url_riley = f'https://rileyrohloff.my.workfront.com/attask/api/v10.0/project/{ID}&sessionID={sessionID}'
+            delete_call = req.get(delete_proj_url_riley)
+            response = delete_call.json()
+            print(response)
+            status_code = delete_call.status_code
+            return status_code
+
+
+create_project('testing')

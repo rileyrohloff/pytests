@@ -1,10 +1,11 @@
 import api_riley
+import utilites
+from dotenv import load_dotenv
 
-def test_api():
-    assert api_riley.generate_key('https://rileyrohloff.my.workfront.com','APIuser@workfront.com','Password1') == True
+load_dotenv()
 
-def test_login_api():
-    assert api_riley.login_api('https://rileyrohloff.my.workfront.com','APIuser@workfront.com','Password1') == True
+def test_create_project():
+    assert api_riley.create_project('pytest') == 200
 
-def test_project_get():
-    assert api_riley.get_project('https://rileyrohloff.my.workfront.com')
+def test_tear_down():
+    assert api_riley.delete_item() == 200
