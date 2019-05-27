@@ -4,50 +4,48 @@ import utilites
 from dotenv import load_dotenv
 import os
 
-test_IDs = []
-
 load_dotenv()
 
 host = os.getenv('domain')
 username = os.getenv('username')
 password = os.getenv('password')
 
+
 def create_session():
-
     login = req.post(utilites.login_url)
-    response_login = login.json()
-    return response_login['data']['sessionID']
+    response = login.json()
+    global sessionID
+    sessionID = response['data']['sessionID']
+    return login.status_code
 
-def create_project(name):
-
-
-    sessionID = create_session()
-
+def create_proj(name, session):
 
     params = {
     'name':name,
-    'groupID':'5b15908a008d09a654a86358f25cc425',
-    'status':'PLN'
+    'status':'PLN',
+    'groupID':'5b9534860397593c6ee5fdbe2b578ede'
     }
 
-    createURL = f'{host}/attask/api/v10.0/project?updates={params}&sessionID={sessionID}'
-    project_create_call = req.post(createURL)
-    response = project_create_call.json()
-    test_IDs.append(response['data']['ID'])
+    create_proj = req.post(f'https://rileyrohloff.my.workfront.com/attask/api/v10.0/project?updates={params}&sessionID={session}')
+    response = create_proj.json()
+    global proj_ID
+    proj_ID = response['data']['ID']
+    proj_name = response['data']['name']
+    return proj_name
 
-    statusCode = project_create_call.status_code
+def update_proj(ID, session):
 
+    update = {
+    'name':'Update Test'
+    }
 
-    if len(test_IDs) == 0:
-        return False
-    else:
-        for ID in test_IDs:
-            delete_proj_url_riley = f'https://rileyrohloff.my.workfront.com/attask/api/v10.0/project/{ID}&sessionID={sessionID}'
-            delete_call = req.get(delete_proj_url_riley)
-            response = delete_call.json()
-            print(response)
-            status_code = delete_call.status_code
-            return status_code
+    update_post = req.put(f"https://rileyrohloff.my.workfront.com/attask/api/v10.0/project/{ID}?updates={update}&sessionID={session}")
+    response = update_post.json()
+    proj_name = response['data']['name']
+    return proj_name
 
-
-create_project('testing')
+def tear_down(ID, session_3):
+    delete_proj = req.delete(f"https://rileyrohloff.my.workfront.com/attask/api/v10.0/project/{ID}?sessionID={session_3}")
+    response = delete_proj.json()
+    print(response)
+    return delete_proj.status_code
