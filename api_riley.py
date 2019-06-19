@@ -87,3 +87,40 @@ def closeTest(session):
     logout_req = req.get(utilites.logout_url, headers=session_auth)
     response = logout_req.json()
     return response['data']
+
+
+# def solution(N):
+#     myList = []
+#     if N % 2 != 0:
+#         myList.append(0)
+#     for i in range(int(N/2)):
+#         myList.append(i + 1)
+#         myList.append(-(i + 1))
+#     return myList
+#
+#
+# def solution_array(n):
+#     indexCount = 0
+#     n.sort()
+#     # n.remove(0)
+#     while n[indexCount] % 4 != 0:
+#         indexCount += 1
+#     return n[indexCount]
+#
+# test_list = [22, 15, 2, 1, 44, 16, 24]
+#
+# # solution()
+# # print(solution_array(test_list))
+#
+# austin  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+#
+# # austin.reverse()
+#
+# length = len(austin)
+# counter = length - 1
+# while counter >= 0:
+#     newList = []
+#     newList.append(austin[counter])
+#     counter -= 1
+#
+# print(newList)
