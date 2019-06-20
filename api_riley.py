@@ -1,6 +1,6 @@
 import requests as req
 import json
-import utilites
+import user_urls
 from dotenv import load_dotenv
 import os
 
@@ -11,8 +11,8 @@ username = os.getenv('username')
 password = os.getenv('password')
 
 
-def create_session():
-    login = req.post(utilites.login_url)
+def create_session(domainUrl):
+    login = req.post(domainUrl)
     response = login.json()
     global sessionID
     sessionID = response['data']['sessionID']
@@ -46,7 +46,7 @@ def create_task(name, session, proj):
     'sessionID':session
     }
 
-    task_create = req.post(utilites.create_task_url, params=params, headers=headers)
+    task_create = req.post(user_urls.create_task_url, params=params, headers=headers)
     response = task_create.json()
     global taskID
     taskID = response['data']['ID']
@@ -61,7 +61,7 @@ def update_task(ID, session):
     'sessionID':session
     }
 
-    update_task_put = req.put(utilites.task_url + ID, headers=headers, params=params)
+    update_task_put = req.put(user_urls.task_url + ID, headers=headers, params=params)
     response = update_task_put.json()
     return response['data']['status']
 
@@ -80,11 +80,11 @@ def tear_down(ID, session_3):
     print(response)
     return delete_proj.status_code
 
-def closeTest(session):
+def closeTest(session,URL):
     session_auth = {
     'sessionID':session
     }
-    logout_req = req.get(utilites.logout_url, headers=session_auth)
+    logout_req = req.get(URL, headers=session_auth)
     response = logout_req.json()
     return response['data']
 

@@ -8,9 +8,8 @@ domain = os.getenv('domain')
 user = os.getenv('username')
 password_user = os.getenv('password')
 
-generate_api_key_url = 'http://%s/attask/api/v10.0/user?action=generateApiKey&username=%s&password=%s&method=PUT'
+# generate_api_key_url = f'http://{domain}/attask/api/v10.0/user?action=generateApiKey&username={username}s&password={password}&method=PUT'
 get_api_key_url = 'http://%s/attask/api/v10.0/user?action=getApiKey&username=%s&password=%s&method=PUT'
-postbin_url = 'http://postbin.a-us-dev.wfk8s.com/postbins/'
 event_sub_url = 'http://%s/attask/eventsubscription/api/v1/subscriptions'
 create_proj_url = 'http://rileyrohloff.my.workfront.com/attask/api/v10.0/project?'
 delete_proj_url = f'http://domain/attask/api/v10.0/%s/%s'
